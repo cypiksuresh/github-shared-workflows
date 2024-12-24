@@ -3,36 +3,36 @@ on:
   workflow_dispatch:   # Manually trigger via GitHub UI
     inputs:
       command:
-        required: false
+        required: true
         description: "Specify the Bash command to be executed"
         type: string
       working-directory:
-        required: false
+        required: true
         description: "Specify the location for command execution"
         type: string
       slack_username:
         description: "It is the name displayed to others in Message on Slack channel"
-        required: false
+        required: true
         type: string
       slack_footer:
         description: "Additional information or context often placed at the bottom of a message in Slack"
-        required: false
+        required: true
         type: string
       slack_icon:
         description: "The visual representation associated with a user or a group on Slack"
-        required: false
+        required: true
         type: string
       slack_message:
         description: "The content or information you want to share on Slack, which is a messaging platform."
-        required: false
+        required: true
         type: string
       slack_color:
         description: "The visual styling applied to elements within a message or interface on Slack."
-        required: false
+        required: true
         type: string
       slack-notification:
         description: "Sending a brief message to a designated Slack channel."
-        default: false
+        default: true
         type: string
     secrets:
       AWS_REGION:
