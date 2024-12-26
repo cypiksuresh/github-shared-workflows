@@ -1,0 +1,44 @@
+name: Slack Notifier
+description: Alerts to a slack channel. Create your webhook on our [Slack Bot here](https://api.slack.com/apps/A04U1JJRPT9/incoming-webhooks). Add the webhook as a secret in your repository with the key `SLACK_WEBHOOK`.
+author: https://github.com/marketplace/actions/slack-notify
+
+on:
+  workflow_dispatch:
+
+jobs:
+  slack-notifier:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Notify on Failure
+        if: failure()
+        uses: dfds/shared-workflows/.github/actions/automation-slack-notifier@master
+        with:
+          slack_webhook: ${{ secrets.SLACK_WEBHOOK }}
+          slack_message: |
+            🚨 *Build Failed*  
+            Repository: ${{ github.repository }}  
+            Branch: ${{ github.ref_name }}  
+            Commit: ${{ github.sha }}  
+            Workflow: ${{ github.workflow }}  
+            Job: ${{ github.job }}
+            🔗 [View Logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+
+      - name: Notify on Success
+        if: success()
+        uses: dfds/shared-workflows/.github/actions/automation-slack-notifier@master
+        with:
+          slack_webhook: ${{ secrets.SLACK_WEBHOOK }}
+          slack_message: |
+            ✅ *Build Succeeded*  
+            Repository: ${{ github.repository }}  
+            Branch: ${{ github.ref_name }}  
+            Commit: ${{ github.sha }}  
+            Workflow: ${{ github.workflow }}  
+            Job: ${{ github.job }}
+            🔗 [View Logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+
+      - name: Log Completion
+        run: echo "Slack notification workflow completed"
