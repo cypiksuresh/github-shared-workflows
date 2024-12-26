@@ -15,7 +15,12 @@ jobs:
         uses: cypiksuresh/shared-workflows/.github/actions/automation-slack-notifier@master
         with:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}  # Fetch the webhook URL from secrets
-          slack_message: 'The workflow ran successfully! 🎉'
+          slack_message: |
+            The workflow ran successfully! 🎉
+            - Repository: ${{ github.repository }}
+            - Author: ${{ github.actor }}
+            - Workflow: ${{ github.workflow }}
+            - Job Status: Success
 
       # Failure Notification
       - name: Notify on failure
@@ -23,4 +28,10 @@ jobs:
         uses: cypiksuresh/shared-workflows/.github/actions/automation-slack-notifier@master
         with:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}  # Fetch the webhook URL from secrets
-          slack_message: 'Hmm, something went wrong. 😞'
+          slack_message: |
+            Hmm, something went wrong. 😞
+            - Repository: ${{ github.repository }}
+            - Author: ${{ github.actor }}
+            - Workflow: ${{ github.workflow }}
+            - Job Status: Failure
+            - Error: ${{ job.status }}
