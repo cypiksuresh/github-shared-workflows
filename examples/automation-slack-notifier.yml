@@ -1,5 +1,5 @@
 name: Slack Notifier
-description: Alerts to a slack channel. Create your webhook on our [Slack Bot here](https://api.slack.com/apps/A04U1JJRPT9/incoming-webhooks). Add the webhook as a secret in your repository with the key `SLACK_WEBHOOK`.
+description: Alerts to a slack channel. Create your webhook on our [Slack Bot here](https://api.slack.com/apps/A04U1JJRPT9/incoming-webhooks). Add the webhook as a secret in your repository with the key `SLACK_WEBHOOK_URL`.
 author: https://github.com/marketplace/actions/slack-notify
 
 on:
@@ -13,12 +13,12 @@ jobs:
         if: success()  # This condition ensures the notification is sent on success
         uses: cypiksuresh/shared-workflows/.github/actions/automation-slack-notifier@master
         with:
-          slack_webhook: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
           slack_message: 'The workflow ran successfully! 🎉'
 
       - name: Notify on failure
         if: failure()  # This condition ensures the notification is sent on failure
         uses: cypiksuresh/shared-workflows/.github/actions/automation-slack-notifier@master
         with:
-          slack_webhook: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
           slack_message: 'Hmm, something went wrong. 😞'

@@ -14,7 +14,7 @@ jobs:
         if: success()  # This condition ensures the notification is sent only on success
         uses: cypiksuresh/shared-workflows/.github/actions/automation-slack-notifier@master
         with:
-          slack_webhook: ${{ secrets.SLACK_WEBHOOK }}  # Fetch the webhook URL from secrets
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}  # Fetch the webhook URL from secrets
           slack_message: 'The workflow ran successfully! 🎉'
 
       # Failure Notification
@@ -22,5 +22,5 @@ jobs:
         if: failure()  # This condition ensures the notification is sent only on failure
         uses: cypiksuresh/shared-workflows/.github/actions/automation-slack-notifier@master
         with:
-          slack_webhook: ${{ secrets.SLACK_WEBHOOK }}  # Fetch the webhook URL from secrets
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}  # Fetch the webhook URL from secrets
           slack_message: 'Hmm, something went wrong. 😞'
