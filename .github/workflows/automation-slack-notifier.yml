@@ -5,14 +5,16 @@ on:
 
 jobs:
   slack-notifier:
-    uses: cypiksuresh/github-shared-workflows/.github/workflows/automation-slack-notifier.yml@master
-    with:
-      slack_webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
-      slack_message: |
-        ✅ *Build Succeeded*  
-        Repository: ${{ github.repository }}  
-        Branch: ${{ github.ref_name }}  
-        Commit: ${{ github.sha }}  
-        Workflow: ${{ github.workflow }}  
-        Job: ${{ github.job }}
-        🔗 [View Logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Slack Notification
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          payload=$(cat <<EOF
+          {
+            "text": "✅ *Build Succeeded*\\nRepository: ${{ github.repository }}\\nBranch: ${{ github.ref_name }}\\nCommit: ${{ github.sha }}\\nWorkflow: ${{ github.workflow }}\\nJob: ${{ github.job }}\\n🔗 <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Logs>"
+          }
+          EOF
+          )
+          curl -X POST -H 'Content-type: application/json' --data "$payload" "$SLACK_WEBHOOK_URL"
