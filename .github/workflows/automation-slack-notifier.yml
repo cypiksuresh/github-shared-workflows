@@ -2,6 +2,7 @@ name: Slack Notifier
 
 on:
   workflow_dispatch:
+
 jobs:
   slack-notifier:
     runs-on: ubuntu-latest
@@ -15,14 +16,14 @@ jobs:
             {
               "text": "✅ *Build Succeeded*\\nRepository: ${{ github.repository }}\\nBranch: ${{ github.ref_name }}\\nCommit: ${{ github.sha }}\\nWorkflow: ${{ github.workflow }}\\nJob: ${{ github.job }}\\n🔗 <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Logs>"
             }
-            EOF
-            )
-          else
-            payload=$(cat <<EOF
-            {
-              "text": "❌ *Build Failed*\\nRepository: ${{ github.repository }}\\nBranch: ${{ github.ref_name }}\\nCommit: ${{ github.sha }}\\nWorkflow: ${{ github.workflow }}\\nJob: ${{ github.job }}\\n🔗 <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Logs>"
-            }
-            EOF
-            )
-          fi
-          curl -X POST -H 'Content-type: application/json' --data "$payload" "$SLACK_WEBHOOK_URL"
+  EOF
+  )
+  else
+  payload=$(cat <<EOF
+  {
+"text": "❌ *Build Failed*\\nRepository: ${{ github.repository }}\\nBranch: ${{ github.ref_name }}\\nCommit: ${{ github.sha }}\\nWorkflow: ${{ github.workflow }}\\nJob: ${{ github.job }}\\n🔗 <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Logs>"
+}
+  EOF
+  )
+  fi
+curl -X POST -H 'Content-type: application/json' --data "$payload" "$SLACK_WEBHOOK_URL"
