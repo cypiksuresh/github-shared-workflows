@@ -22,15 +22,87 @@
 #          curl -X POST -H 'Content-type: application/json' --data '{"text": "'"$message"'"}' "$SLACK_WEBHOOK_URL"
 
 
-name: Slack Notifier
-
+---
+run-name: 'Readme workflow'
 on:
-  workflow_dispatch:
+  workflow_call:
+    secrets:
+      TOKEN:
+        required: true
+        description: 'GitHub Token.'
+      SLACK_WEBHOOK_URL:
+        required: true
+        description: 'Slack webhook url.'
 
 jobs:
-  slack-notifier:
+  readme-workflow:
     runs-on: ubuntu-latest
     steps:
-      - name: Send Slack Notification
-        run: |
-          curl -X POST -H 'Content-type: application/json' --data '{"text": "✅ *Build Succeeded*\\nRepository: ${{ github.repository }}\\nBranch: ${{ github.ref_name }}\\nCommit: ${{ github.sha }}\\nWorkflow: ${{ github.workflow }}\\nJob: ${{ github.job }}\\n🔗 [View Logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"}' ${{ secrets.SLACK_WEBHOOK_URL }}
+      - name: Updating GitHub Token
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+        run: echo "GH_TOKEN=${GITHUB_TOKEN}" >> $GITHUB_ENV
+
+      - name: checkout
+        uses: actions/checkout@master
+        with:
+          fetch-depth: 0
+          ref: master
+          token: ${{ env.GH_TOKEN }}
+
+      - name: 'Set up Python 3.7'
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: 'create readme'
+        uses: 'clouddrove/github-actions@9.0.3'
+        with:
+          actions_subcommand: 'readme'
+          github_token: '${{ secrets.TOKEN }}'
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN}}
+
+      - name: 'pre-commit check errors'
+        uses: pre-commit/action@v3.0.1
+        continue-on-error: true
+
+      - name: 'pre-commit fix erros'
+        uses: pre-commit/action@v3.0.1
+        continue-on-error: true
+
+      - name: 'push readme'
+        uses: 'clouddrove/github-actions@9.0.3'
+        with:
+          actions_subcommand: 'push'
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN}}
+
+      - name: 'Slack Notification'
+        uses: clouddrove/action-slack@v2
+        with:
+          status: ${{ job.status }}
+          fields: repo,author
+          author_name: 'CloudDrove'
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        if: always()
+...
+
+
+#
+#name: readme workflow
+#on:
+#  push:
+#    branches:
+#      - master
+#    paths-ignore:
+#      - 'README.md'
+#  workflow_dispatch:
+#jobs:
+#  assignee:
+#    uses: cypiksuresh/github-shared-workflows/.github/workflows/readme.yml@master
+#    secrets:
+#      TOKEN :                  # Provide GitHub token
+#      SLACK_WEBHOOK_TERRAFORM: # Provide slack-webhook url
