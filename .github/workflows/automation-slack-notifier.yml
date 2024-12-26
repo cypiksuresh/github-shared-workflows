@@ -13,10 +13,9 @@ jobs:
           curl -X POST -H 'Content-type: application/json' \
           --data '{"text":"🚨 *Action Setup Failed* Repository: '${{ github.repository }}' Workflow: '${{ github.workflow }}' Job: '${{ github.job }}' 🔗 [View Logs]('${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}')"}' \
           ${{ secrets.SLACK_WEBHOOK_URL }}
-
       - name: Notify on Success
         if: success()
-        uses: dfds/shared-workflows/.github/actions/automation-slack-notifier@master
+        uses: cypiksuresh/github-shared-workflows/.github/workflows/automation-slack-notifier.yml@master
         with:
           slack_webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
           slack_message: |
