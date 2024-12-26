@@ -1,8 +1,11 @@
 name: Slack Notifier
 
 on:
-  workflow_dispatch:
+  workflow_dispatch:  # Manually triggered workflow
 
 jobs:
   slack-notifier:
     uses: cypiksuresh/shared-workflows/.github/workflows/automation-slack-notifier.yml@master
+    with:
+      slack_webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+      slack_message: 'The workflow ran successfully! 🎉'
