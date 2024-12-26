@@ -4,18 +4,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  notify-setup-failure:
-    runs-on: ubuntu-latest
-    if: failure()
-    steps:
-      - name: Notify on Setup Failure
-        run: |
-          curl -X POST -H 'Content-type: application/json' \
-          --data '{"text":"🚨 *Action Setup Failed* Repository: '${{ github.repository }}' Workflow: '${{ github.workflow }}' Job: '${{ github.job }}' 🔗 [View Logs]('${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}')"}' \
-          ${{ secrets.SLACK_WEBHOOK_URL }}
-
   slack-notifier:
-    needs: notify-setup-failure
     uses: cypiksuresh/github-shared-workflows/.github/workflows/automation-slack-notifier.yml@master
     with:
       slack_webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
