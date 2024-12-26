@@ -4,19 +4,5 @@ on:
   workflow_dispatch:
 
 jobs:
-  slack-notifier:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Notify on success
-        if: success()  # This condition ensures the notification is sent on success
-        uses: cypiksuresh/shared-workflows/.github/actions/automation-slack-notifier@master
-        with:
-          slack_webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
-          slack_message: 'The workflow ran successfully! 🎉'
-
-      - name: Notify on failure
-        if: failure()  # This condition ensures the notification is sent on failure
-        uses: cypiksuresh/shared-workflows/.github/actions/automation-slack-notifier@master
-        with:
-          slack_webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
-          slack_message: 'Hmm, something went wrong. 😞'
+  shared:
+     uses: cypiksuresh/shared-workflows/.github/actions/automation-slack-notifier@master

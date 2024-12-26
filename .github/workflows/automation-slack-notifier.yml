@@ -1,9 +1,7 @@
 name: Slack Notifier
-description: Alerts to a Slack channel. Create your webhook on our [Slack Bot here](https://api.slack.com/apps/A04U1JJRPT9/incoming-webhooks). Add the webhook as a secret in your repository with the key `SLACK_WEBHOOK`.
-author: https://github.com/marketplace/actions/slack-notify
 
 on:
-  workflow_dispatch:  # This allows you to manually trigger the workflow from the GitHub Actions UI
+  workflow_dispatch:  # Allows manual trigger of the workflow
 
 jobs:
   slack-notifier:
@@ -14,7 +12,7 @@ jobs:
         if: success()  # This condition ensures the notification is sent only on success
         uses: cypiksuresh/shared-workflows/.github/actions/automation-slack-notifier@master
         with:
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}  # Fetch the webhook URL from secrets
+          slack_webhook: ${{ secrets.SLACK_WEBHOOK_URL }}  # Fetch the webhook URL from secrets
           slack_message: |
             The workflow ran successfully! 🎉
             - Repository: ${{ github.repository }}
@@ -25,13 +23,15 @@ jobs:
             - Job Status: Success
             - Event: ${{ github.event_name }}
             - Ref: ${{ github.ref }}
+            - Run URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+            - Timestamp: ${{ github.event.head_commit.timestamp }}
 
       # Failure Notification
       - name: Notify on failure
         if: failure()  # This condition ensures the notification is sent only on failure
         uses: cypiksuresh/shared-workflows/.github/actions/automation-slack-notifier@master
         with:
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}  # Fetch the webhook URL from secrets
+          slack_webhook: ${{ secrets.SLACK_WEBHOOK_URL }}  # Fetch the webhook URL from secrets
           slack_message: |
             Hmm, something went wrong. 😞
             - Repository: ${{ github.repository }}
@@ -43,3 +43,5 @@ jobs:
             - Error: ${{ job.status }}
             - Event: ${{ github.event_name }}
             - Ref: ${{ github.ref }}
+            - Run URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+            - Timestamp: ${{ github.event.head_commit.timestamp }}
