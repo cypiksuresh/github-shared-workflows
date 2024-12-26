@@ -12,7 +12,7 @@ jobs:
 
       - name: Notify on Failure
         if: failure()
-        uses: dfds/shared-workflows/.github/actions/automation-slack-notifier@master
+        uses: cypiksuresh/shared-workflows/.github/actions/automation-slack-notifier@master
         with:
           slack_webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
           slack_message: |
