@@ -7,22 +7,12 @@ jobs:
   slack-notifier:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Notify on Failure
+      - name: Notify on Setup Failure
         if: failure()
-        uses: cypiksuresh/github-shared-workflows/.github/workflows/automation-slack-notifier.yml@master
-        with:
-          slack_webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
-          slack_message: |
-            🚨 *Build Failed*  
-            Repository: ${{ github.repository }}  
-            Branch: ${{ github.ref_name }}  
-            Commit: ${{ github.sha }}  
-            Workflow: ${{ github.workflow }}  
-            Job: ${{ github.job }}
-            🔗 [View Logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+        run: |
+          curl -X POST -H 'Content-type: application/json' \
+          --data '{"text":"🚨 *Action Setup Failed* Repository: '${{ github.repository }}' Workflow: '${{ github.workflow }}' Job: '${{ github.job }}' 🔗 [View Logs]('${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}')"}' \
+          ${{ secrets.SLACK_WEBHOOK_URL }}
 
       - name: Notify on Success
         if: success()
