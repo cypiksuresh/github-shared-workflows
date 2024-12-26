@@ -1,0 +1,17 @@
+name: Auto release
+description: Creates a Github Release on push to master. Automatically tags the release and create release notes from git log. Change the semantic versioning by applying labels, **release:patch**, **release:minor**, **release:major**. Works best in conjuction with [Enforce PR labels](https://github.com/cypiksuresh/shared-workflows#enforce-pr-labels).
+author: https://github.com/marketplace/actions/tag-release-on-push-action
+
+on:
+  push:
+    branches: ["master", "main"]
+
+jobs:
+  shared:
+    uses: cypiksuresh/shared-workflows/.github/workflows/automation-auto-release.yml@master
+    # Note, make sure to use `secrets: inherit` if utilizing the organizational secret `GH_RELEASE`
+    # secrets: inherit
+
+    # In order to add prefix to the tag:
+    with:
+      tag_prefix: "your_prefix"

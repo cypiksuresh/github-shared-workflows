@@ -1,0 +1,15 @@
+{
+    "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+    "extends": [
+        "local>cypiksuresh/renovate-config"
+    ],
+    "packageRules": [
+        {
+            "matchUpdateTypes": [
+                "major"
+            ],
+            "minimumReleaseAge": "7 days",
+            "automerge": true
+        }
+    ]
+}
