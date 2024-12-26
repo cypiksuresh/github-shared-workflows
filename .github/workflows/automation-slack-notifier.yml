@@ -11,19 +11,12 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         run: |
-          if [[ "${{ github.event.workflow_run.conclusion }}" == "success" ]]; then
-            payload=$(cat <<EOF
-            {
-              "text": "✅ *Build Succeeded*\\nRepository: ${{ github.repository }}\\nBranch: ${{ github.ref_name }}\\nCommit: ${{ github.sha }}\\nWorkflow: ${{ github.workflow }}\\nJob: ${{ github.job }}\\n🔗 <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Logs>"
-            }
-  EOF
-  )
-  else
-  payload=$(cat <<EOF
-  {
-"text": "❌ *Build Failed*\\nRepository: ${{ github.repository }}\\nBranch: ${{ github.ref_name }}\\nCommit: ${{ github.sha }}\\nWorkflow: ${{ github.workflow }}\\nJob: ${{ github.job }}\\n🔗 <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Logs>"
-}
-  EOF
-  )
-  fi
-curl -X POST -H 'Content-type: application/json' --data "$payload" "$SLACK_WEBHOOK_URL"
+          message="✅ *Build Succeeded*  
+          Repository: ${{ github.repository }}  
+          Branch: ${{ github.ref_name }}  
+          Commit: ${{ github.sha }}  
+          Workflow: ${{ github.workflow }}  
+          Job: ${{ github.job }}  
+          🔗 [View Logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+          
+          curl -X POST -H 'Content-type: application/json' --data '{"text": "'"$message"'"}' "$SLACK_WEBHOOK_URL"
