@@ -242,7 +242,7 @@ How to invoke this action:
 name: Slack Notifier
 
 on:
-	workflow_dispatch:  # Manually triggered workflow
+	workflow_dispatch:  # Allows manual triggering of the workflow
 
 jobs:
 	slack-notifier:
@@ -253,14 +253,15 @@ jobs:
 			  uses: cypiksuresh/shared-workflows/.github/actions/automation-slack-notifier@master
 			  with:
 				  slack_webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
-				  slack_message: 'The workflow ran successfully! 🎉'
+				  slack_message: '🎉 The workflow ran successfully!'
 
 			- name: Notify on failure
 			  if: failure()
 			  uses: cypiksuresh/shared-workflows/.github/actions/automation-slack-notifier@master
 			  with:
 				  slack_webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
-				  slack_message: 'Something went wrong. 😞'
+				  slack_message: '😞 The workflow encountered an error.'
+
 
 ```
 
