@@ -1,7 +1,7 @@
 name: Slack Notifier
 
 on:
-  workflow_dispatch:  # Allows manual trigger of the workflow
+  workflow_dispatch:  # Allows manual triggering of the workflow
 
 jobs:
   slack-notifier:
@@ -9,18 +9,17 @@ jobs:
     steps:
       # Success Notification
       - name: Notify on success
-        if: success()  # This condition ensures the notification is sent only on success
+        if: success()  # Send notification only if the workflow succeeds
         uses: cypiksuresh/shared-workflows/.github/actions/automation-slack-notifier@master
         with:
-          slack_webhook: ${{ secrets.SLACK_WEBHOOK_URL }}  # Fetch the webhook URL from secrets
+          slack_webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
           slack_message: |
-            The workflow ran successfully! 🎉
+            🎉 The workflow completed successfully!
             - Repository: ${{ github.repository }}
             - Author: ${{ github.actor }}
             - Commit: ${{ github.sha }}
             - Commit Message: ${{ github.event.head_commit.message }}
             - Workflow: ${{ github.workflow }}
-            - Job Status: Success
             - Event: ${{ github.event_name }}
             - Ref: ${{ github.ref }}
             - Run URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
@@ -28,19 +27,17 @@ jobs:
 
       # Failure Notification
       - name: Notify on failure
-        if: failure()  # This condition ensures the notification is sent only on failure
+        if: failure()  # Send notification only if the workflow fails
         uses: cypiksuresh/shared-workflows/.github/actions/automation-slack-notifier@master
         with:
-          slack_webhook: ${{ secrets.SLACK_WEBHOOK_URL }}  # Fetch the webhook URL from secrets
+          slack_webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
           slack_message: |
-            Hmm, something went wrong. 😞
+            😞 The workflow failed.
             - Repository: ${{ github.repository }}
             - Author: ${{ github.actor }}
             - Commit: ${{ github.sha }}
             - Commit Message: ${{ github.event.head_commit.message }}
             - Workflow: ${{ github.workflow }}
-            - Job Status: Failure
-            - Error: ${{ job.status }}
             - Event: ${{ github.event_name }}
             - Ref: ${{ github.ref }}
             - Run URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
