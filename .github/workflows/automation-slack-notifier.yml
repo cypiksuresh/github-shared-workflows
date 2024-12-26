@@ -1,3 +1,27 @@
+#name: Slack Notifier
+#
+#on:
+#  workflow_dispatch:
+#
+#jobs:
+#  slack-notifier:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Send Slack Notification
+#        env:
+#          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+#        run: |
+#          message="✅ *Build Succeeded*
+#          Repository: ${{ github.repository }}
+#          Branch: ${{ github.ref_name }}
+#          Commit: ${{ github.sha }}
+#          Workflow: ${{ github.workflow }}
+#          Job: ${{ github.job }}
+#          🔗 [View Logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+#
+#          curl -X POST -H 'Content-type: application/json' --data '{"text": "'"$message"'"}' "$SLACK_WEBHOOK_URL"
+
+
 name: Slack Notifier
 
 on:
@@ -8,15 +32,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Send Slack Notification
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         run: |
-          message="✅ *Build Succeeded*  
-          Repository: ${{ github.repository }}  
-          Branch: ${{ github.ref_name }}  
-          Commit: ${{ github.sha }}  
-          Workflow: ${{ github.workflow }}  
-          Job: ${{ github.job }}  
-          🔗 [View Logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
-          
-          curl -X POST -H 'Content-type: application/json' --data '{"text": "'"$message"'"}' "$SLACK_WEBHOOK_URL"
+          curl -X POST -H 'Content-type: application/json' --data '{"text": "✅ *Build Succeeded*\\nRepository: ${{ github.repository }}\\nBranch: ${{ github.ref_name }}\\nCommit: ${{ github.sha }}\\nWorkflow: ${{ github.workflow }}\\nJob: ${{ github.job }}\\n🔗 [View Logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"}' ${{ secrets.SLACK_WEBHOOK_URL }}
