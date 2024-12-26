@@ -242,26 +242,25 @@ How to invoke this action:
 name: Slack Notifier
 
 on:
-  workflow_dispatch:
+	workflow_dispatch:  # Manually triggered workflow
 
 jobs:
-  slack-notifier:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Notify on success
-        if: success()  # This condition ensures the notification is sent on success
-        uses: cypiksuresh/shared-workflows/.github/actions/automation-slack-notifier@master
-        with:
-          slack_webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
-          slack_message: 'The workflow ran successfully! 🎉'
+	slack-notifier:
+		runs-on: ubuntu-latest
+		steps:
+			- name: Notify on success
+			  if: success()
+			  uses: cypiksuresh/shared-workflows/.github/actions/automation-slack-notifier@master
+			  with:
+				  slack_webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+				  slack_message: 'The workflow ran successfully! 🎉'
 
-      - name: Notify on failure
-        if: failure()  # This condition ensures the notification is sent on failure
-        uses: cypiksuresh/shared-workflows/.github/actions/automation-slack-notifier@master
-        with:
-          slack_webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
-          slack_message: 'Hmm, something went wrong. 😞'
-
+			- name: Notify on failure
+			  if: failure()
+			  uses: cypiksuresh/shared-workflows/.github/actions/automation-slack-notifier@master
+			  with:
+				  slack_webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+				  slack_message: 'Something went wrong. 😞'
 
 ```
 

@@ -5,7 +5,18 @@ on:
 
 jobs:
   slack-notifier:
-    uses: cypiksuresh/shared-workflows/.github/workflows/automation-slack-notifier.yml@master
-    with:
-      slack_webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
-      slack_message: 'The workflow ran successfully! 🎉'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notify on success
+        if: success()
+        uses: cypiksuresh/shared-workflows/.github/actions/automation-slack-notifier@master
+        with:
+          slack_webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          slack_message: 'The workflow ran successfully! 🎉'
+
+      - name: Notify on failure
+        if: failure()
+        uses: cypiksuresh/shared-workflows/.github/actions/automation-slack-notifier@master
+        with:
+          slack_webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          slack_message: 'Something went wrong. 😞'
