@@ -19,8 +19,12 @@ jobs:
             The workflow ran successfully! 🎉
             - Repository: ${{ github.repository }}
             - Author: ${{ github.actor }}
+            - Commit: ${{ github.sha }}
+            - Commit Message: ${{ github.event.head_commit.message }}
             - Workflow: ${{ github.workflow }}
             - Job Status: Success
+            - Event: ${{ github.event_name }}
+            - Ref: ${{ github.ref }}
 
       # Failure Notification
       - name: Notify on failure
@@ -32,6 +36,10 @@ jobs:
             Hmm, something went wrong. 😞
             - Repository: ${{ github.repository }}
             - Author: ${{ github.actor }}
+            - Commit: ${{ github.sha }}
+            - Commit Message: ${{ github.event.head_commit.message }}
             - Workflow: ${{ github.workflow }}
             - Job Status: Failure
             - Error: ${{ job.status }}
+            - Event: ${{ github.event_name }}
+            - Ref: ${{ github.ref }}
