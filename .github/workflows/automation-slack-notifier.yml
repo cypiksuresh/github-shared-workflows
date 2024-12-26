@@ -4,28 +4,26 @@ on:
   workflow_dispatch:
 
 jobs:
-  slack-notifier:
+  notify-setup-failure:
     runs-on: ubuntu-latest
+    if: failure()
     steps:
       - name: Notify on Setup Failure
-        if: failure()
         run: |
           curl -X POST -H 'Content-type: application/json' \
           --data '{"text":"🚨 *Action Setup Failed* Repository: '${{ github.repository }}' Workflow: '${{ github.workflow }}' Job: '${{ github.job }}' 🔗 [View Logs]('${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}')"}' \
           ${{ secrets.SLACK_WEBHOOK_URL }}
-      - name: Notify on Success
-        if: success()
-        uses: cypiksuresh/github-shared-workflows/.github/workflows/automation-slack-notifier.yml@master
-        with:
-          slack_webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
-          slack_message: |
-            ✅ *Build Succeeded*  
-            Repository: ${{ github.repository }}  
-            Branch: ${{ github.ref_name }}  
-            Commit: ${{ github.sha }}  
-            Workflow: ${{ github.workflow }}  
-            Job: ${{ github.job }}
-            🔗 [View Logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
 
-      - name: Log Completion
-        run: echo "Slack notification workflow completed"
+  slack-notifier:
+    needs: notify-setup-failure
+    uses: cypiksuresh/github-shared-workflows/.github/workflows/automation-slack-notifier.yml@master
+    with:
+      slack_webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+      slack_message: |
+        ✅ *Build Succeeded*  
+        Repository: ${{ github.repository }}  
+        Branch: ${{ github.ref_name }}  
+        Commit: ${{ github.sha }}  
+        Workflow: ${{ github.workflow }}  
+        Job: ${{ github.job }}
+        🔗 [View Logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
