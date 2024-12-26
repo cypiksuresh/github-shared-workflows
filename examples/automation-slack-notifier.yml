@@ -4,5 +4,5 @@ on:
   workflow_dispatch:
 
 jobs:
-  shared:
-     uses: cypiksuresh/shared-workflows/.github/actions/automation-slack-notifier@master
+  slack-notifier:
+    uses: cypiksuresh/shared-workflows/.github/workflows/automation-slack-notifier.yml@master
