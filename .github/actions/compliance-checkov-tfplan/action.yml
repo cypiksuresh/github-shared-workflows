@@ -7,6 +7,10 @@ inputs:
   file-path:
     description: 'Path to the tfplan file'
     required: true
+  working-directory: # Add input for working directory
+    description: 'Working directory where the tfplan file is located'
+    required: true
+
 runs:
   using: "composite"
   steps:
@@ -14,21 +18,24 @@ runs:
       shell: bash
       run: |
         jsonfile=${{ inputs.file-path }}
-        if [ ! -f $jsonfile ]; then
-          echo "file does not exist"
+        working_dir=${{ inputs.working-directory }}  # Get the working directory from input
+        full_path="${working_dir}/${jsonfile}"  # Construct the full path to tfplan file
+
+        if [ ! -f $full_path ]; then
+          echo "file does not exist: $full_path"
           exit 1
         fi
-        echo "tfplan.json exits."
-        cat $jsonfile | jq '.' > out.json
+        echo "tfplan.json exists at $full_path."
+        cat $full_path | jq '.' > out.json
+
     - name: Install checkov
       run: |
         pip3 install checkov
-        # check checkov is installed
+        # check if checkov is installed
         if [[ $(pip3 list | grep -i "checkov") =~ "checkov" ]]; then
           echo "checkov is installed"
         else
           echo "checkov is not installed"
-          echo "Install checkov."
           exit 1
         fi
       shell: bash
